@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Tickets from "./pages/Tickets";
 import TicketDetail from "./pages/TicketDetail";
+import "./styles/styles.css";
 
 function App() {
   return (
@@ -40,6 +41,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <TicketDetail />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/register"
+            element={
+              <ProtectedRoute>
+                <Register />
               </ProtectedRoute>
             }
           />

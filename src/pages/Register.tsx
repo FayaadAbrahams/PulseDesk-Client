@@ -9,17 +9,55 @@ import {
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import * as React from "react";
-
+import * as z from "zod";
+import { toast } from "sonner";
+import { RegisterSchema } from "@/validations/register-form";
+import axios from "axios";
 const SignupForm = ({ ...props }: React.ComponentProps<typeof Card>) => {
-  const [password, setPassword] = React.useState(null);
+  const form = useForm({
+    resolver: zodResolver(RegisterSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: ""
+    },
+  })
+
+  function onSubmit(data: z.infer<typeof RegisterSchema>) {
+    try {
+      axios.post("")
+    } catch (error) {
+
+      console.error(error);
+      toast("You submitted the following values:", {
+        description: (
+          <pre className="mt-2 w-[320px] overflow-x-auto rounded-md bg-code p-4 text-code-foreground">
+            <code>{JSON.stringify(data, null, 2)}</code>
+          </pre>
+        ),
+        position: "bottom-right",
+        classNames: {
+          content: "flex flex-col gap-2",
+        },
+        style: {
+          "--border-radius": "calc(var(--radius)  + 4px)",
+        } as React.CSSProperties,
+      })
+    }
+
+  }
 
   return (
-    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+    <div className="flex min-h-svh w-full items-center justify-center py-20 p-6 md:p-10">
       <div className="w-full max-w-sm">
         <Card {...props}>
           <CardHeader>
@@ -29,51 +67,112 @@ const SignupForm = ({ ...props }: React.ComponentProps<typeof Card>) => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form>
+            <form id="form-register" onSubmit={form.handleSubmit(onSubmit)} >
               <FieldGroup>
-                <Field>
-                  <FieldLabel htmlFor="name">Full Name</FieldLabel>
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder="John Doe"
-                    required
-                  />
-                </Field>
-                <Field>
-                  <FieldLabel htmlFor="email">Email</FieldLabel>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="danwhoa@example.com"
-                    required
-                  />
-                  <FieldDescription>
-                    We&apos;ll use this to contact you. We will not share your
-                    email with anyone else.
-                  </FieldDescription>
-                </Field>
-                <Field>
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <Input id="password" type="password" required />
-                  <FieldDescription>
-                    Must be at least 8 characters long.
-                  </FieldDescription>
-                </Field>
-                <Field>
-                  <FieldLabel htmlFor="confirm-password">
-                    Confirm Password
-                  </FieldLabel>
-                  <Input id="confirm-password" type="password" required />
-                  <FieldDescription>
-                    Please confirm your password.
-                  </FieldDescription>
-                </Field>
+                <Controller
+                  name="name"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="form-register-title">
+                        Full Name
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id="form-register-title"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Daniel Jacobs"
+                        autoComplete="off"
+                        required
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+                <Controller
+                  name="email"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="form-register-email">
+                        Email
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id="form-register-email"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="danwhoa@example.com"
+                        autoComplete="off"
+                        required
+                        type="email"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                      <FieldDescription>
+                        We'll use this to contact you. We will not share your
+                        email with anyone else.
+                      </FieldDescription>
+                    </Field>
+
+                  )}
+                />
+                <Controller
+                  name="password"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="form-register-password">
+                        Password
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id="form-register-password"
+                        aria-invalid={fieldState.invalid}
+                        placeholder=""
+                        autoComplete="off"
+                        required
+                        type="password"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+
+                    </Field>
+                  )}
+                />
+                <Controller
+                  name="confirmPassword"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="form-register-confirm-password">
+                        Confirm Password
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id="form-register-confirm-password"
+                        aria-invalid={fieldState.invalid}
+                        placeholder=""
+                        autoComplete="off"
+                        required
+                        type="password"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+
+                    </Field>
+                  )}
+                />
                 <FieldGroup>
-                  <Field>
-                    <Button type="submit">Create Account</Button>
-                    <Button variant="outline" type="button">
-                      Sign up with Google
+                  <Field id="form-button-group">
+                    <Button type="submit" form="form-register">Create Account</Button>
+                    <Button variant="outline" type="button" >
+                      <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Icon" />
+                      Continue with Google
                     </Button>
                     <FieldDescription className="px-6 text-center">
                       Already have an account? <a href="/login">Sign in</a>
