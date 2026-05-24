@@ -7,11 +7,13 @@ import Dashboard from "./pages/Dashboard";
 import Tickets from "./pages/Tickets";
 import TicketDetail from "./pages/TicketDetail";
 import "./styles/styles.css";
+import { Toaster } from "./components/ui/sonner";
 
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <Toaster />
         <Routes>
           {/* Public routes */}
           <Route path="/login" element={<Login />} />
@@ -21,7 +23,7 @@ function App() {
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute roles={["Admin, Agent, User"]}>
                 <Dashboard />
               </ProtectedRoute>
             }
@@ -30,7 +32,7 @@ function App() {
           <Route
             path="/tickets"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute roles={["Admin, Agent"]}>
                 <Tickets />
               </ProtectedRoute>
             }
@@ -39,7 +41,7 @@ function App() {
           <Route
             path="/tickets/:id"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute roles={["Admin, Agent"]}>
                 <TicketDetail />
               </ProtectedRoute>
             }

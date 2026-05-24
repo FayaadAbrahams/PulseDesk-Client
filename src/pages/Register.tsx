@@ -5,6 +5,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+
 } from "@/components/ui/card";
 import {
   Field,
@@ -13,21 +14,22 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
+import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as React from "react";
 import * as z from "zod";
-import { toast } from "sonner";
 import { RegisterSchema } from "@/validations/register-form";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
+import axios from "axios";
 
 
 const SignupForm = ({ ...props }: React.ComponentProps<typeof Card>) => {
   const auth = useAuth();
   const navigate = useNavigate();
-  
+
   const form = useForm({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
@@ -39,27 +41,22 @@ const SignupForm = ({ ...props }: React.ComponentProps<typeof Card>) => {
   })
 
   async function onSubmit(data: z.infer<typeof RegisterSchema>) {
-
-
     try {
       await auth.registerUser(data.name, data.email, data.password);
       navigate('/login');
     } catch (error) {
-      console.error(error);
-      toast("You submitted the following values:", {
-        description: (
-          <pre className="mt-2 w-[320px] overflow-x-auto rounded-md bg-code p-4 text-code-foreground">
-            <code>{JSON.stringify(data, null, 2)}</code>
-          </pre>
-        ),
-        position: "top-center",
-        classNames: {
-          content: "flex flex-col gap-2",
-        },
-        style: {
-          "--border-radius": "calc(var(--radius)  + 4px)",
-        } as React.CSSProperties,
-      })
+      if (axios.isAxiosError(error)) {
+        var message = error.response?.data?.message ?? "Registration failed";
+
+        if (error.response?.data?.message == "Email already in use.") {
+          message = error.response?.data?.message;
+          toast.info(message, { description: "Login or reset your password!", position: "top-center" });
+        } else {
+          message = "Registration failed";
+          toast.error(message, { description: message, position: "top-center" });
+          console.error(error);
+        }
+      }
     }
 
   }
