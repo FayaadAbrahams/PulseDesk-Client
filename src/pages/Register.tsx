@@ -20,8 +20,14 @@ import * as React from "react";
 import * as z from "zod";
 import { toast } from "sonner";
 import { RegisterSchema } from "@/validations/register-form";
-import axios from "axios";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router";
+
+
 const SignupForm = ({ ...props }: React.ComponentProps<typeof Card>) => {
+  const auth = useAuth();
+  const navigate = useNavigate();
+  
   const form = useForm({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
@@ -32,11 +38,13 @@ const SignupForm = ({ ...props }: React.ComponentProps<typeof Card>) => {
     },
   })
 
-  function onSubmit(data: z.infer<typeof RegisterSchema>) {
-    try {
-      axios.post("")
-    } catch (error) {
+  async function onSubmit(data: z.infer<typeof RegisterSchema>) {
 
+
+    try {
+      await auth.registerUser(data.name, data.email, data.password);
+      navigate('/login');
+    } catch (error) {
       console.error(error);
       toast("You submitted the following values:", {
         description: (
@@ -44,7 +52,7 @@ const SignupForm = ({ ...props }: React.ComponentProps<typeof Card>) => {
             <code>{JSON.stringify(data, null, 2)}</code>
           </pre>
         ),
-        position: "bottom-right",
+        position: "top-center",
         classNames: {
           content: "flex flex-col gap-2",
         },
