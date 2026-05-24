@@ -49,11 +49,12 @@ const SignupForm = ({ ...props }: React.ComponentProps<typeof Card>) => {
         var message = error.response?.data?.message ?? "Registration failed";
 
         if (error.response?.data?.message == "Email already in use.") {
-          message = error.response?.data?.message;
-          toast.info(message, { description: "Login or reset your password!", position: "top-center" });
+          message = "Email already in use.";
+          toast.info(message, { description: "Let's log you in or reset your password!", position: "top-center" });
+          setTimeout(() => navigate("/login"), 2000);
         } else {
           message = "Registration failed";
-          toast.error(message, { description: message, position: "top-center" });
+          toast.error("Registration failed.", { description: "Please try again.", position: "top-center" });
           console.error(error);
         }
       }
@@ -65,10 +66,16 @@ const SignupForm = ({ ...props }: React.ComponentProps<typeof Card>) => {
     <div className="flex min-h-svh w-full items-center justify-center py-20 p-6 md:p-10">
       <div className="w-full max-w-sm">
         <Card {...props}>
-          <CardHeader>
+          {/* <CardHeader>
             <CardTitle>Create an account</CardTitle>
             <CardDescription>
               Enter your information below to create your account
+            </CardDescription>
+          </CardHeader> */}
+          <CardHeader>
+            <h1 className="text-4xl pb-5">Create an account</h1>
+            <CardTitle>Welcome to PulseDesk!</CardTitle>
+            <CardDescription>Add your information below to create your account & start tracking!
             </CardDescription>
           </CardHeader>
           <CardContent>
