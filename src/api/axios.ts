@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  // ! Change when moving from dev to prod
+  //! Change when moving from dev to prod
   baseURL: "http://localhost:5286/api",
 });
 
