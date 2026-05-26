@@ -144,3 +144,13 @@ body {
     @apply font-sans;
   }
 }
+
+#header-banner {
+  width: 100%;
+  padding-top: 3%;
+  padding-left: 5%;
+
+  img {
+    width: 300px;
+  }
+}

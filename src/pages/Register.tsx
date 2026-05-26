@@ -43,7 +43,8 @@ const SignupForm = ({ ...props }: React.ComponentProps<typeof Card>) => {
   async function onSubmit(data: z.infer<typeof RegisterSchema>) {
     try {
       await auth.registerUser(data.name, data.email, data.password);
-      navigate('/login');
+      toast.info(message, { description: "Registration Successful!", position: "top-center" });
+      setTimeout(() => navigate("/login"), 1500);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         var message = error.response?.data?.message ?? "Registration failed";
@@ -51,7 +52,7 @@ const SignupForm = ({ ...props }: React.ComponentProps<typeof Card>) => {
         if (error.response?.data?.message == "Email already in use.") {
           message = "Email already in use.";
           toast.info(message, { description: "Let's log you in or reset your password!", position: "top-center" });
-          setTimeout(() => navigate("/login"), 2000);
+          setTimeout(() => navigate("/login"), 1500);
         } else {
           message = "Registration failed";
           toast.error("Registration failed.", { description: "Please try again.", position: "top-center" });
@@ -59,19 +60,12 @@ const SignupForm = ({ ...props }: React.ComponentProps<typeof Card>) => {
         }
       }
     }
-
   }
 
   return (
     <div className="flex min-h-svh w-full items-center justify-center py-20 p-6 md:p-10">
       <div className="w-full max-w-sm">
         <Card {...props}>
-          {/* <CardHeader>
-            <CardTitle>Create an account</CardTitle>
-            <CardDescription>
-              Enter your information below to create your account
-            </CardDescription>
-          </CardHeader> */}
           <CardHeader>
             <h1 className="text-4xl pb-5">Create an account</h1>
             <CardTitle>Welcome to PulseDesk!</CardTitle>

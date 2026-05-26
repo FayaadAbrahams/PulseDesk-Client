@@ -8,12 +8,14 @@ import Tickets from "./pages/Tickets";
 import TicketDetail from "./pages/TicketDetail";
 import "./styles/styles.css";
 import { Toaster } from "./components/ui/sonner";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Toaster />
+        <Toaster theme="light" />
+        <Navbar />
         <Routes>
           {/* Public routes */}
           <Route path="/login" element={<Login />} />

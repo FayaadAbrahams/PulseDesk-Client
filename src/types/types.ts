@@ -1,12 +1,12 @@
 export interface User {
   fullName: string;
   email: string;
-  role: string;
+  role: UserRole;
 }
 
 export interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<any>;
+  loginUser: (email: string, password: string) => Promise<any>;
   registerUser: (
     fullName: string,
     email: string,
@@ -14,4 +14,10 @@ export interface AuthContextType {
   ) => Promise<void>;
   logout: () => void;
   loading: boolean;
+}
+
+export enum UserRole {
+  Customer = "Customer",
+  Agent = "Agent",
+  Admin = "Admin",
 }
