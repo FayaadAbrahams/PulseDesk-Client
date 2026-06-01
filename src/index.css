@@ -154,3 +154,8 @@ body {
     width: 300px;
   }
 }
+
+#sidebar-logout:hover {
+  background-color: var(--destructive);
+  color: var(--background);
+}

@@ -6,35 +6,44 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Tickets from "./pages/Tickets";
 import TicketDetail from "./pages/TicketDetail";
-import "./styles/styles.css";
 import { Toaster } from "./components/ui/sonner";
-import Navbar from "./components/Navbar";
+import PublicRoute from "./utils/PublicRoute";
+import Layout from "./components/layout";
 
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Toaster theme="light" />
-        <Navbar />
+        <Toaster theme="dark" />
         <Routes>
           {/* Public routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+
+          <Route path="/login" element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          } />
+          <Route path="/register" element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          } />
 
           {/* Protected routes */}
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute roles={["Admin, Agent, User"]}>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
+          <Route element={
+            <ProtectedRoute>
+              <Layout />
+            </ProtectedRoute>
+          }>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/tickets" element={<Tickets />} />
+            <Route path="/tickets/:id" element={<TicketDetail />} />
+          </Route>
 
           <Route
             path="/tickets"
             element={
-              <ProtectedRoute roles={["Admin, Agent"]}>
+              <ProtectedRoute roles={["Admin", "Agent", "Customer"]}>
                 <Tickets />
               </ProtectedRoute>
             }
@@ -43,17 +52,8 @@ function App() {
           <Route
             path="/tickets/:id"
             element={
-              <ProtectedRoute roles={["Admin, Agent"]}>
+              <ProtectedRoute roles={["Admin", "Agent"]}>
                 <TicketDetail />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/register"
-            element={
-              <ProtectedRoute>
-                <Register />
               </ProtectedRoute>
             }
           />

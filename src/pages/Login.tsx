@@ -27,6 +27,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { User, UserRole } from "@/types/types";
 import { validateEmail } from "@/utils/emailUtil";
+import Navbar from "@/components/Navbar";
 
 
 const LoginForm = ({ className, ...props }: React.ComponentProps<"div">) => {
@@ -70,84 +71,86 @@ const LoginForm = ({ className, ...props }: React.ComponentProps<"div">) => {
     }
   }
   return (
-    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-sm">
-        <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div>
+      <Navbar />
+      <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+        <div className="w-full max-w-sm">
+          <div className={cn("flex flex-col gap-6", className)} {...props}>
+            <Card>
+              <CardHeader>
+                <h1 className="text-4xl pb-5">Login</h1>
+                <CardTitle>Welcome back</CardTitle>
+                <CardDescription>Let's get you back to the ticket stand.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form id="form-login" onSubmit={form.handleSubmit(onSubmit)}>
+                  <FieldGroup>
+                    <Controller
+                      name="email"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field data-invalid={fieldState.invalid}>
+                          <FieldLabel htmlFor="form-login-email">
+                            Email
+                          </FieldLabel>
+                          <Input
+                            {...field}
+                            id="form-login-email"
+                            aria-invalid={fieldState.invalid}
+                            placeholder=""
+                            autoComplete="off"
+                            required
+                            type="email"
+                          />
+                          {fieldState.invalid && (
+                            <FieldError errors={[fieldState.error]} />
+                          )}
 
-          <Card>
-            <CardHeader>
-              <h1 className="text-4xl pb-5">Login</h1>
-              <CardTitle>Welcome back</CardTitle>
-              <CardDescription>Let's get you back to the ticket stand.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form id="form-login" onSubmit={form.handleSubmit(onSubmit)}>
-                <FieldGroup>
-                  <Controller
-                    name="email"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel htmlFor="form-login-email">
-                          Email
-                        </FieldLabel>
-                        <Input
-                          {...field}
-                          id="form-login-email"
-                          aria-invalid={fieldState.invalid}
-                          placeholder=""
-                          autoComplete="off"
-                          required
-                          type="email"
-                        />
-                        {fieldState.invalid && (
-                          <FieldError errors={[fieldState.error]} />
-                        )}
+                        </Field>
+                      )}
+                    />
+                    <Controller
+                      name="password"
+                      control={form.control}
+                      render={({ field, fieldState }) => (
+                        <Field data-invalid={fieldState.invalid}>
+                          <FieldLabel htmlFor="form-login-password">
+                            Password
+                          </FieldLabel>
+                          <Input
+                            {...field}
+                            id="form-login-password"
+                            aria-invalid={fieldState.invalid}
+                            placeholder=""
+                            autoComplete="off"
+                            required
+                            type="password"
+                          />
+                          {fieldState.invalid && (
+                            <FieldError errors={[fieldState.error]} />
+                          )}
 
-                      </Field>
-                    )}
-                  />
-                  <Controller
-                    name="password"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel htmlFor="form-login-password">
-                          Password
-                        </FieldLabel>
-                        <Input
-                          {...field}
-                          id="form-login-password"
-                          aria-invalid={fieldState.invalid}
-                          placeholder=""
-                          autoComplete="off"
-                          required
-                          type="password"
-                        />
-                        {fieldState.invalid && (
-                          <FieldError errors={[fieldState.error]} />
-                        )}
-
-                      </Field>
-                    )}
-                  />
-                  <Field>
-                    <Button type="submit" form="form-login" disabled={loading}>
-                      {loading ? <LoadingSpinner size="sm" /> : "Login"}
-                    </Button>
-                    <Button variant="outline" type="button">
-                      <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Icon" />
-                      Login with Google
-                    </Button>
-                    <FieldDescription className="text-center">
-                      Don&apos;t have an account?{" "}
-                      <a href="/register">Sign up</a>
-                    </FieldDescription>
-                  </Field>
-                </FieldGroup>
-              </form>
-            </CardContent>
-          </Card>
+                        </Field>
+                      )}
+                    />
+                    <Field>
+                      <Button type="submit" form="form-login" disabled={loading}>
+                        {loading ? <LoadingSpinner size="sm" /> : "Login"}
+                      </Button>
+                      <Button variant="outline" type="button">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Icon" />
+                        Login with Google
+                      </Button>
+                      <FieldDescription className="text-center">
+                        Don&apos;t have an account?{" "}
+                        <a href="/register">Sign up</a>
+                      </FieldDescription>
+                    </Field>
+                  </FieldGroup>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>
