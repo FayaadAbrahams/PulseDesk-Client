@@ -21,3 +21,9 @@ export enum UserRole {
   Agent = "Agent",
   Admin = "Admin",
 }
+
+export interface SideBarState {
+  sidebar: {
+    isOpen: boolean;
+  };
+}

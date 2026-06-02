@@ -1,12 +1,8 @@
 import * as React from "react"
-
 import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
-    SidebarGroup,
-    SidebarGroupContent,
-    SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
@@ -16,10 +12,10 @@ import {
 import { NavUser } from "./NavUser"
 import { useAuth } from "@/context/AuthContext";
 import { Link } from "react-router-dom";
-import { IconClipboardList, IconHome, IconLayoutDashboard, IconTicket, IconUsers } from "@tabler/icons-react";
-import { icons } from "lucide-react";
-
-
+import { IconClipboardList, IconHome, IconLayoutSidebarLeftExpand, IconTicket, IconUsers } from "@tabler/icons-react";
+import { SideBarState } from "@/types/types";
+import { useSelector } from "react-redux";
+import { TooltipProvider } from "./ui/tooltip";
 
 interface NavItem {
     title: string
@@ -28,7 +24,6 @@ interface NavItem {
     isActive?: boolean
     roles: string[]
 }
-
 
 const navItems: NavItem[] = [
     {
@@ -55,16 +50,18 @@ const navItems: NavItem[] = [
         icon: IconClipboardList,
         roles: ["Admin"]
     }
-]
+];
 
 export function SideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const { user } = useAuth();
     const visibleItems = navItems.filter(item =>
         item.roles.includes(user?.role ?? "")
-    )
+    );
+    const sidebarOpen = useSelector((state: SideBarState) => state.sidebar.isOpen);
+
     return (
         <div id="dashboard-sidebar" className="light">
-            <Sidebar {...props}>
+            <Sidebar {...props} collapsible="icon" variant="floating">
                 <SidebarHeader>
                     <SidebarMenu>
                         <SidebarMenuItem>
@@ -72,9 +69,11 @@ export function SideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                 asChild
                                 className="data-[slot=sidebar-menu-button]:p-1.5!"
                             >
-                                <Link to="#">
-                                    <span className="text-base font-semibold">PulseDesk</span>
-                                    <img src="./icon.svg" alt="icon-pulse-desk" width={20} />
+                                <Link to="#" className="flex items-center ">
+                                    {sidebarOpen && (
+                                        < span className="text-base font-semibold">PulseDesk</span>)}
+                                    <img src="./icon.svg" alt="icon-pulse-desk" width={18} />
+
                                 </Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
@@ -84,13 +83,20 @@ export function SideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <SidebarMenu>
                         <SidebarMenu>
                             {visibleItems.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild>
-                                        <Link to={item.url}>
-                                            <item.icon className="size-4" />
-                                            {item.title}
-                                        </Link>
-                                    </SidebarMenuButton>
+                                <SidebarMenuItem key={item.title} className="flex items-center">
+                                    <TooltipProvider>
+                                        <SidebarMenuButton tooltip={item.title} asChild>
+                                            <Link
+                                                to={item.url}
+
+                                            >
+                                                <item.icon className="size-5 shrink-0" />
+                                                <span className="group-data-[collapsible=icon]:hidden">
+                                                    {item.title}
+                                                </span>
+                                            </Link>
+                                        </SidebarMenuButton>
+                                    </TooltipProvider>
                                 </SidebarMenuItem>
                             ))}
                         </SidebarMenu>
@@ -101,7 +107,7 @@ export function SideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <NavUser user={{ name: user?.fullName ?? "", email: user?.email ?? "", avatar: "/avatar-test.jpg" }} />
                 </SidebarFooter>
             </Sidebar>
-        </div>
+        </div >
     )
 }
 

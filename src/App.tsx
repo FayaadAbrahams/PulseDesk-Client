@@ -8,7 +8,8 @@ import Tickets from "./pages/Tickets";
 import TicketDetail from "./pages/TicketDetail";
 import { Toaster } from "./components/ui/sonner";
 import PublicRoute from "./utils/PublicRoute";
-import Layout from "./components/layout";
+import Layout from "./components/Layout";
+import Users from "./pages/Users";
 
 function App() {
   return (
@@ -38,6 +39,8 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/tickets" element={<Tickets />} />
             <Route path="/tickets/:id" element={<TicketDetail />} />
+            <Route path="/Users" element={<Users />} />
+            <Route path="/audit-logs" element={<Users />} />
           </Route>
 
           <Route
